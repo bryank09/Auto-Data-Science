@@ -1,0 +1,33 @@
+:root {
+  --background-color: #f0f3fa;
+  --primary-color: #201d43;
+  --secondary-color: #ffffff;
+
+}
+
+body {
+  position: relative;
+  background-color: var(--background-color) !important;
+  color: var(--primary-color) !important;
+  font-family: 'Centra', sans-serif !important;
+}
+
+a {
+  color: var(--primary-color) !important;
+}
+
+button {
+  background-color: var(--primary-color) !important;
+  color: var(--background-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.home-header a {
+  font-size: 2em
+}
+
+.secondary-button{
+  background-color: var(--background-color) !important;
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
