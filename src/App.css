@@ -1,7 +1,7 @@
 :root {
   --background-color: #f0f3fa;
   --primary-color: #201d43;
-  --secondary-color: #ffffff;
+  --secondary-color: #6d249b;
 
 }
 
@@ -22,12 +22,134 @@ button {
   border-color: var(--primary-color) !important;
 }
 
-.home-header a {
-  font-size: 2em
+.home-header .nav a.nav-link {
+  font-size: 2em;
+  opacity: 0.75;
+}
+
+.home-header .nav a.nav-link:hover,
+.home-header .nav a.nav-link.active {
+  opacity: 1;
+}
+
+.home-header .nav a.nav-link:after {
+  display: block;
+  content: '';
+  border-bottom: solid 3px var(--secondary-color);
+  transform: scaleX(0);
+  transition: transform 250ms ease-in-out;
+}
+
+.home-header .nav a.nav-link:hover:after {
+  transform: scaleX(1);
+}
+
+.home-header .nav a.nav-link:after {
+  transform-origin: 0% 50%;
 }
 
 .secondary-button{
   background-color: var(--background-color) !important;
   border-color: var(--primary-color) !important;
   color: var(--primary-color) !important;
+}
+
+/********************* Pricing Page *********************/
+#pricing-header{
+  padding: 2em;
+  /* background-image: url("./assets/img/pricing-background.png"); */
+}
+
+#pricing-header p{
+  text-align: center;
+  line-height: 1em;
+}
+
+#pricing-header .title{
+  font-size: 4.5em;
+  font-weight: bold;
+}
+
+#pricing-header .description{
+  font-size: 1.8rem;
+  padding-left: 5em;
+  padding-right: 5em;
+}
+
+#pricing-header button{
+  padding: 0.8em 1em 0.8em 1em;
+}
+
+.modal-dialog{
+  border-top: none;
+}
+
+/********************* Form Payment *********************/
+.FormGroup {
+	margin: 0 15px 20px;
+	padding: 0;
+	border-style: none;
+	background-color: #7795f8;
+	will-change: opacity, transform;
+	box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08), inset 0 1px 0 #829fff;
+	border-radius: 4px;
+}
+
+.FormRow {
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-align: center;
+	align-items: center;
+	margin-left: 15px;
+	border-top: 1px solid #819efc;
+}
+
+.StripeElement--webkit-autofill {
+	background: transparent !important;
+}
+
+.StripeElement {
+	width: 100%;
+	padding: 11px 15px 11px 0;
+}
+
+.dashboard{
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+}
+
+.AppHeader{
+  height: 10%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 2em 4px 2em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.AppFooter{
+height: 50px;
+display: flex;
+justify-content: space-evenly;
+align-items: center;
+border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.SideMenuAndPageContent{
+  display: flex;
+  flex: 1;
+  justify-content: flex-start;
+  align-items: flex-start;
+  background-color: rgba(0, 0, 0, 0.05) ;
+}
+.SideMenu{
+  height: 100%;
+}
+.SideMenuVertical{
+  height: 100%;
+}
+.PageContent{
+  padding-left: 12px;
 }
