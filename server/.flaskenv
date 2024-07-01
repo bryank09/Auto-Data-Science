@@ -1,0 +1,2 @@
+FLASK_APP=autoaiserver.py
+FLASK_ENV=development
