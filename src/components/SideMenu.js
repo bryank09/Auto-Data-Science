@@ -4,6 +4,7 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { FiLogOut } from "react-icons/fi";
 import { Menu } from "antd";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -35,19 +36,9 @@ function SideMenu() {
             key: "/",
           },
           {
-            label: "Inventory",
-            key: "/inventory",
-            icon: <ShopOutlined />,
-          },
-          {
-            label: "Orders",
-            key: "/orders",
-            icon: <ShoppingCartOutlined />,
-          },
-          {
-            label: "Customers",
-            key: "/customers",
-            icon: <UserOutlined />,
+            label: "LogOut",
+            key: "/",
+            icon: <FiLogOut />,
           },
         ]}
       ></Menu>

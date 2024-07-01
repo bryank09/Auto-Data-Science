@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import App from './App';
 import { BrowserRouter as Router } from 'react-router-dom';

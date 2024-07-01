@@ -12,8 +12,6 @@ export const Banner = () => {
     const bannerRef = useRef(null);
     const [anim, setAnim] = useState(true);
 
-    const [showItem, setShowItem] = useState(false);
-
     return (
         <section>
             <Container className="d-flex flex-column gap-5">
