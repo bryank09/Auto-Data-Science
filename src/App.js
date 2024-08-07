@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { NavBar } from './components/NavBar.js';
@@ -19,8 +19,8 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />}>
-        <Route path="" element={<Banner />}/>
-        <Route path="pricing" element={<Pricing />}/>
+        <Route path="" element={<Banner />} />
+        <Route path="pricing" element={<Pricing />} />
       </Route>
       <Route path="/dashboard" element={<Dashboard />}>
         <Route path="" element={<Menu />}></Route>
@@ -41,17 +41,18 @@ function Home() {
     </div>
   )
 }
+const ModelContext = createContext();
 
 function Dashboard() {
   return (
     <div className="dashboard">
       <AppHeader />
-      <div className="SideMenuAndPageContent">
-        <SideMenu></SideMenu>
-        <div className="PageContent">
-          <Outlet />
+        <div className="SideMenuAndPageContent">
+          <SideMenu></SideMenu>
+          <div className="PageContent">
+            <Outlet />
+          </div>
         </div>
-      </div>
       <AppFooter />
     </div>
   );

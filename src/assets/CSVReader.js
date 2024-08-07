@@ -12,6 +12,7 @@ import Container from 'react-bootstrap/Container';
 import { LineChart } from '@mui/x-charts';
 import { FaRegImage } from "react-icons/fa";
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 const UploadFile = () => {
   const [file, setFile] = useState(null);
@@ -55,18 +56,40 @@ const UploadFile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [modelDetails, setModelDetails] = useState({});
 
+  const location = useLocation();
+  useEffect(() => {
+    const fetchModelId = async () => {
+      // Extract model_id from URL query parameters
+      const queryParams = new URLSearchParams(location.search);
+      const id = queryParams.get('key');
+
+      if (id) {
+        setModelKey(id);
+      }else{
+        setModelKey(null)
+      }
+    };
+
+    fetchModelId();
+  }, [location.search]);
+
   useEffect(() => {
     fetch('http://localhost:5000/model_details', {
-      method: 'GET'
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "model_id": modelkey 
+      })
     })
       .then(response => response.json())
       .then(responseData => {
-        console.log(responseData)
         setModelDetails(responseData);
         //setModelKey(responseData.model_id)
       })
       .catch(error => console.error('Error:', error));
-  }, []);
+  }, [modelkey]);
 
   const setTableData = (csvData, csvHeaders) => {
     setData(csvData);
@@ -131,7 +154,6 @@ const UploadFile = () => {
       }
     };
     processFile();
-    console.log(tempHolder);
     setTableColumns(tempHolder);
   }, [file]);
 
@@ -163,6 +185,7 @@ const UploadFile = () => {
   const handleSelectChange = (event) => {
     setSelectedColumn(event.target.value);
   };
+
   return (
     <>
       {modelkey ? (<ModelPredictions modelkey={modelkey} modelDetails={modelDetails} />) :
@@ -235,7 +258,13 @@ const ModelPredictions = ({ modelkey, modelDetails }) => {
 
   useEffect(() => {
     fetch('http://localhost:5000/table_data', {
-      method: 'GET'
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "model_id": modelkey 
+      })
     })
       .then(response => response.json())
       .then(data => {
@@ -251,6 +280,7 @@ const ModelPredictions = ({ modelkey, modelDetails }) => {
         setColumns(generatedColumns);
         setTableData(data.data);
         setInputTemplate(combinedTemplate);
+        setPredictedVal("PREDICT YOUR DATA!")
         const firstRowValues = data.data[0];
         const initialValues = Object.keys(firstRowValues).reduce((obj, key) => {
           obj[key] = firstRowValues[key];
@@ -259,7 +289,7 @@ const ModelPredictions = ({ modelkey, modelDetails }) => {
         setInputValues(initialValues);
       })
       .catch(error => console.error('Error:', error));
-  }, [modelDetails]);
+  }, [modelkey]);
 
   const handleChange = (key, value) => {
     setInputTemplate(prevState => ({
@@ -279,7 +309,6 @@ const ModelPredictions = ({ modelkey, modelDetails }) => {
       };
       return obj;
     }, {});
-    console.log(input_data);
     try {
       fetch('http://localhost:5000/predict', {
         method: 'POST',
@@ -292,7 +321,6 @@ const ModelPredictions = ({ modelkey, modelDetails }) => {
         })
       }).then(response => response.json())
         .then(data => {
-          console.log(data);
           setPredictedVal(data.predictions);
         })
         .catch(error => console.error('Error:', error));
@@ -441,20 +469,11 @@ const ChartGenerator = (data) => {
   const [chartTopData, setChartTopData] = useState(null);
   const [paymentMethodData, setPaymentMethodData] = useState(null);
   useEffect(() => {
-    axios.get('http://localhost:5000/categories')
-      .then(response => {
-        console.log(response);
-        setSalesCategories(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the data!', error);
-      });
     fetch('http://localhost:5000/piechart', {
       method: 'GET'
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
         setSalesCategories(data);
       })
       .catch(error => console.error('Error:', error));

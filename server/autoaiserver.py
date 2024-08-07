@@ -121,6 +121,7 @@ def store_data_sql(df, table_name):
 
     columns = []
     for col_name, col_type in df.dtypes.items():
+        print(str(col_name) + " is: " + str(col_type))
         if "int" in str(col_type):
             col_type_sql = "INT"
         elif "float" in str(col_type):
@@ -130,7 +131,7 @@ def store_data_sql(df, table_name):
         elif "time" in str(col_type):
             col_type_sql = "DATETIME"
         # Add more type mappings as needed
-        columns.append(f"{col_name} {col_type_sql}")
+        columns.append(f"{col_name.strip().replace(' ', '_').replace('-', '_')} {col_type_sql}")
 
     create_table_query = f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join(columns)})"
     print(create_table_query)
@@ -139,7 +140,7 @@ def store_data_sql(df, table_name):
     placeholders = ", ".join(["%s"] * len(df.columns))
     insert_query = f"INSERT INTO {table_name} ({', '.join(df.columns)}) VALUES ({placeholders})"
 
-
+    print(insert_query)
     dataset = [tuple(row) for _, row in df.iterrows()]
 
     cursor.executemany(insert_query, dataset)
@@ -167,6 +168,7 @@ def upload_csv():
             except UnicodeDecodeError:
                 df = pd.read_csv(uploaded_file.stream, encoding='cp1252')
 
+        df = df.dropna()
         store_data_sql(df, table_name)
         X = df.drop(y_column, axis=1)
         Y = df[y_column]
@@ -408,12 +410,12 @@ def get_top_results():
 
     return jsonify({'top_product': {'data': product_dataset, 'label' : product_label}, 'top_age':{'data': age_dataset, 'label' : age_label}})
 
-@app.route('/model_details', methods=['GET'])
+@app.route('/model_details', methods=['POST'])
 @cross_origin(origin='*',headers=['Content-Type'])
 def get_model_details():
     mydb = mysql.connector.connect(**sql_config)
     cursor = mydb.cursor()
-    model_id = 5
+    model_id = request.json.get('model_id')
     model_details_query = "SELECT mae, mse, rmse, r, r_square, predicted_column, model_id FROM models WHERE model_id = %s;"
     cursor.execute(model_details_query, (model_id,))
     model_details = cursor.fetchone()
@@ -425,12 +427,12 @@ def get_model_details():
     else:
         return jsonify({'error': 'No data found for the specified model_id.'}), 40
 
-@app.route('/table_data', methods=['GET'])
+@app.route('/table_data', methods=['POST'])
 @cross_origin(origin='*',headers=['Content-Type'])
 def get_table_data():
     mydb = mysql.connector.connect(**sql_config)
     cursor = mydb.cursor()
-    model_id = 5
+    model_id = request.json.get('model_id')
     model_details_query = "SELECT table_name FROM models WHERE model_id = %s;"
     cursor.execute(model_details_query, (model_id,))
     result = cursor.fetchone()
@@ -459,5 +461,22 @@ def get_table_data():
         "header": {'field_names': field_names, 'field_type': field_types}
     }
     return jsonify(data)
+
+@app.route('/get_user_models', methods=['GET'])
+@cross_origin(origin='*',headers=['Content-Type'])
+def get_user_models():
+    mydb = mysql.connector.connect(**sql_config)
+    cursor = mydb.cursor()
+    model_details_query = "SELECT model_id, table_name FROM models WHERE user_id = %s;"
+
+    #Integrate the dynamic user Id here in the future
+    cursor.execute(model_details_query, (1,))
+    rows = cursor.fetchall()
+
+    cursor.close()
+    mydb.close()
+
+    # Return the results as JSON
+    return jsonify(rows)
 
 app.run(host='localhost', port=5000)
