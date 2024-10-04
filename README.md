@@ -1,4 +1,4 @@
-# Robotic-Arm_Simulation
+# E-commerce AutoAI Web Application
 ![home page](https://github.com/user-attachments/assets/c64cc01e-d60b-4607-814d-16ebabbd36fd)
 
 ## About the Project
